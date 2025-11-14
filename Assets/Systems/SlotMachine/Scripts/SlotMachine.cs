@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,6 +7,8 @@ public class SlotMachine : MonoBehaviour
 {
     [SerializeField] private SlotCyllinder[] slotCyllinders;
     [SerializeField] private Button spinButton;
+
+    List<SymbolType> results = new List<SymbolType>();
 
     private void OnEnable()
     {
@@ -30,12 +33,14 @@ public class SlotMachine : MonoBehaviour
     
     IEnumerator SpinSequence()
     {
+        results.Clear();
         StartSpinningAllCyllinders();
 
         foreach (var slotCyllinder in slotCyllinders)
         {
             yield return new WaitForSeconds(1f);
-            slotCyllinder.StopSpinning();
+            results.Add(slotCyllinder.StopSpinning());
         }
+        Debug.Log("Spin results: " + string.Join(", ", results));
     }
 }

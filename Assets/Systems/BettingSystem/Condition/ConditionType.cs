@@ -1,4 +1,4 @@
-public enum ConditionTypes
+public enum ConditionType
 {
     AtLeastOne,
     AtLeastTwo,

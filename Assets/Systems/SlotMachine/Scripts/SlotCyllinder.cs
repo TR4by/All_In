@@ -39,16 +39,15 @@ public class SlotCyllinder : MonoBehaviour
     }
 
     [ContextMenu("Stop")]
-    public void StopSpinning()
+    public SymbolType StopSpinning()
     {
         var roundedYPosition = Mathf.Round(transform.localPosition.y / segmentScale) * segmentScale;
         transform.localPosition = new Vector3(transform.localPosition.x, roundedYPosition, transform.localPosition.z);
         isSpinning = false;
 
         var segmentIndex = (int)(roundedYPosition / segmentScale);
-        Debug.Log("Stopped at segment: " + segmentIndex);
         
         var symbol = transform.GetChild(segmentIndex).GetComponent<SlotCyllinderSymbol>();
-        Debug.Log(symbol.symbolData.symbolType);
+        return symbol.symbolData.symbolType;
     }
 }

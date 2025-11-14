@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86096cc71cf7f094ca70aacc7d3491ad, type: 3}
   m_Name: Shield
   m_EditorClassIdentifier: 
-  symbolType: 0
-  atlasID: 0
+  symbolType: 3
+  atlasID: 3
