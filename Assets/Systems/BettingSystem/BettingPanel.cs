@@ -22,6 +22,12 @@ public class BettingPanel : MonoBehaviour
             displayedBets[i].InitializeBet(randomBets[i], i+1);
     }
 
+    public Bet GetSelectedBet()
+    {
+        var selectedToggle = betToggleGroup.ActiveToggles().FirstOrDefault();
+        return selectedToggle.GetComponent<Bet>();
+    }
+
     private List<T> GetRandomUniqueItems<T>(List<T> list, int count)
     {
         return list
