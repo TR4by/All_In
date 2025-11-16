@@ -15,11 +15,14 @@ public class GameManager : MonoBehaviour
     public bool WasLastRollWon { get; private set; }
     public bool BetChosen => bettingPanel.GetSelectedBet() != null;
 
+    [SerializeField] private int requiredCoins = 1000;
+
     [SerializeField] private SlotMachine slotMachine;
     [SerializeField] private BettingPanel bettingPanel;
     [SerializeField] private HealthDisplay healthDisplay;
     [SerializeField] private CoinDisplay coinDisplay;
     [SerializeField] private EventSystem eventSystem;
+    [SerializeField] private StoryScreensManager endingManager;
 
     void Awake()
     {
@@ -38,14 +41,19 @@ public class GameManager : MonoBehaviour
         slotMachine.OnRollingFinished.RemoveListener(HandleOnRollingFinished);
     }
 
+    public void BlockInteraction(bool state)
+    {
+        eventSystem.enabled = !state;
+    }
+
     private void HandleOnRollingStarted()
     {
-        eventSystem.enabled = false;
+        BlockInteraction(true);
     }
 
     private void HandleOnRollingFinished(List<SymbolType> rollResult)
     {
-        eventSystem.enabled = true;
+        BlockInteraction(false);
 
         var wasBroke = IsPlayerBroke;
         var currentBet = bettingPanel.GetSelectedBet().betData;
@@ -55,26 +63,32 @@ public class GameManager : MonoBehaviour
         bettingPanel.InitializeBets();
 
         if (healthDisplay.CurrentHealthCount < 0)
-            KillPlayer();
+            TriggerDeathEnding();
 
-        HandlePlayerBroke(wasBroke);
+        HandleIfPlayerBroke(wasBroke);
+        HandleIfPlayerWon();
     }
 
-    private void HandlePlayerBroke(bool wasBroke)
+    private void HandleIfPlayerBroke(bool wasBroke)
     {
         if (!wasBroke) return;
 
         if (healthDisplay.CurrentHealthCount == 0 && coinDisplay.CurrentCoinCount < 0)
-            KillPlayer();
+            TriggerDeathEnding();
         else if (coinDisplay.CurrentCoinCount < 0)
             healthDisplay.AddHealth(-1);
+    }
+
+    private void HandleIfPlayerWon()
+    {
+        if (coinDisplay.CurrentCoinCount < requiredCoins) return;
+        TriggerVictoryEnding();
     }
 
     private void GiveRewards(bool didWin, BetData currentBet)
     {
         if (didWin)
         {
-            Debug.Log("Won!");
             if (currentBet.rewardSymbol == SymbolType.Coin)
                 coinDisplay.AddCoins(currentBet.rewardCount);
             else if (currentBet.rewardSymbol == SymbolType.Heart)
@@ -82,7 +96,6 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("Lost!");
             if (currentBet.punishmentSymbol == SymbolType.Coin)
                 coinDisplay.AddCoins(-currentBet.punishmentCount);
             else if (currentBet.punishmentSymbol == SymbolType.Heart)
@@ -96,8 +109,15 @@ public class GameManager : MonoBehaviour
         return result;
     }
 
-    private void KillPlayer()
+    private void TriggerDeathEnding()
     {
-        Debug.Log("Player Died");
+        eventSystem.enabled = false;
+        endingManager.StartDeathEndingSequence();
+    }
+
+    private void TriggerVictoryEnding()
+    {
+        eventSystem.enabled = false;
+        endingManager.StartWinEndingSequence();
     }
 }

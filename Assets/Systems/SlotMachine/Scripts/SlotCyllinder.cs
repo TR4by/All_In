@@ -4,13 +4,14 @@ public class SlotCyllinder : MonoBehaviour
 {
     [SerializeField] private float speed = -15f;
     [SerializeField] private float segmentScale = 20f;
-
+    private RectTransform rectTransform;
     private bool isSpinning;
     private int segmentCount;
 
     private void Awake()
     {
         segmentCount = transform.childCount;
+        rectTransform = GetComponent<RectTransform>();
     }
 
     private void Update()
@@ -23,7 +24,7 @@ public class SlotCyllinder : MonoBehaviour
     
     private void Spin()
     {
-        transform.Translate(Vector3.down * Time.deltaTime * speed * Random.Range(1f, 1.5f));
+        rectTransform.anchoredPosition = new Vector2 (rectTransform.anchoredPosition.x, rectTransform.anchoredPosition.y - speed * Time.deltaTime * Random.Range(1f, 1.5f));
         Loop();
     }
 

@@ -47,7 +47,6 @@ public class SlotMachine : MonoBehaviour
             yield return new WaitForSeconds(1f);
             results.Add(slotCyllinder.StopSpinning());
         }
-        Debug.Log("Spin results: " + string.Join(", ", results));
         OnRollingFinished?.Invoke(results);
     }
 }
