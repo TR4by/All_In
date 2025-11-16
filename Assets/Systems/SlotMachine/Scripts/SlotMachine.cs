@@ -12,7 +12,7 @@ public class SlotMachine : MonoBehaviour
     [SerializeField] private SlotCyllinder[] slotCyllinders;
     [SerializeField] private Button spinButton;
 
-    List<SymbolType> results = new List<SymbolType>();
+    List<SymbolType> results = new();
 
     private void OnEnable()
     {

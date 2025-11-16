@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 888241cfbb732654cb591e204680d999, type: 3}
-  m_Name: BetData 2
+  m_Name: BetData 1
   m_EditorClassIdentifier: 
   rewardSymbol: 1
-  rewardCount: 50
+  rewardCount: 100
   punishmentSymbol: 0
   punishmentCount: 1
-  conditionSymbol: 3
+  conditionSymbol: 1
   condition: 0

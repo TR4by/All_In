@@ -16,6 +16,7 @@ public class BettingPanel : MonoBehaviour
 
     public void InitializeBets()
     {
+        betToggleGroup.SetAllTogglesOff();
         var randomBets = GetRandomUniqueItems(betsData, 3);
 
         for (int i = 0; i < randomBets.Count; i++)
@@ -26,6 +27,10 @@ public class BettingPanel : MonoBehaviour
     {
         var selectedToggle = betToggleGroup.ActiveToggles().FirstOrDefault();
         return selectedToggle.GetComponent<Bet>();
+    }
+
+    public void LockInteraction()
+    {
     }
 
     private List<T> GetRandomUniqueItems<T>(List<T> list, int count)

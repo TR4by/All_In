@@ -1,12 +1,20 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
+    public UnityEvent OnRollingStarted => slotMachine.OnRollingStarted;
+    public UnityEvent<List<SymbolType>> OnRollingFinished => slotMachine.OnRollingFinished;
+    public bool WasLastRollWon { get; private set; }
+
     [SerializeField] private SlotMachine slotMachine;
     [SerializeField] private BettingPanel bettingPanel;
+    [SerializeField] private HealthDisplay healthDisplay;
+    [SerializeField] private CoinDisplay coinDisplay;
     
     void Awake()
     {
@@ -15,33 +23,54 @@ public class GameManager : MonoBehaviour
 
     void OnEnable()
     {
-        slotMachine.OnRollingStarted.AddListener(OnRollingStarted);
-        slotMachine.OnRollingFinished.AddListener(OnRollingFinished);
+        slotMachine.OnRollingStarted.AddListener(HandleOnRollingStarted);
+        slotMachine.OnRollingFinished.AddListener(HandleOnRollingFinished);
     }
 
     void OnDisable()
     {
-        slotMachine.OnRollingStarted.RemoveListener(OnRollingStarted);
-        slotMachine.OnRollingFinished.RemoveListener(OnRollingFinished);
+        slotMachine.OnRollingStarted.RemoveListener(HandleOnRollingStarted);
+        slotMachine.OnRollingFinished.RemoveListener(HandleOnRollingFinished);
     }
 
-    private void OnRollingStarted()
+    private void HandleOnRollingStarted()
     {
-        // Todo: Disallow clicking anything!
+        //bettingPanel.LockInteraction();
+        //slotMachine.LockInteraction();
     }
 
-    private void OnRollingFinished(List<SymbolType> rollResult)
+    private void HandleOnRollingFinished(List<SymbolType> rollResult)
     {
-        if (EvaluateSelectedBet(rollResult))
-            Debug.Log("Player WON the bet!");
+        var currentBet = bettingPanel.GetSelectedBet().betData;
+        WasLastRollWon = EvaluateSelectedBet(rollResult, currentBet);
+        GiveRewards(WasLastRollWon, currentBet);
+
+        bettingPanel.InitializeBets();
+    }
+
+    private void GiveRewards(bool didWin, BetData currentBet)
+    {
+        if (didWin)
+        {
+            Debug.Log("Won!");
+            if (currentBet.rewardSymbol == SymbolType.Coin)
+                coinDisplay.AddCoins(currentBet.rewardCount);
+            else if (currentBet.rewardSymbol == SymbolType.Heart)
+                healthDisplay.AddHealth(currentBet.rewardCount);
+        }
         else
-            Debug.Log("Player LOST the bet!");
+        {
+            Debug.Log("Lost!");
+            if (currentBet.punishmentSymbol == SymbolType.Coin)
+                coinDisplay.AddCoins(-currentBet.punishmentCount);
+            else if (currentBet.punishmentSymbol == SymbolType.Heart)
+                healthDisplay.AddHealth(-currentBet.punishmentCount);
+        }
     }
 
-    private bool EvaluateSelectedBet(List<SymbolType> rollResult)
+    private bool EvaluateSelectedBet(List<SymbolType> rollResult, BetData currentBet)
     {
-        var currentBet = bettingPanel.GetSelectedBet();
-        var result = BetEvaluator.EvaluateBet(currentBet.betData, rollResult);
+        var result = BetEvaluator.EvaluateBet(currentBet, rollResult);
         return result;
     }
 }
