@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BetData 5
   m_EditorClassIdentifier: 
   rewardSymbol: 1
-  rewardCount: 200
+  rewardCount: 100
   punishmentSymbol: 1
   punishmentCount: 100
   conditionSymbol: 1

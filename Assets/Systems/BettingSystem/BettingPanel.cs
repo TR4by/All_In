@@ -26,11 +26,10 @@ public class BettingPanel : MonoBehaviour
     public Bet GetSelectedBet()
     {
         var selectedToggle = betToggleGroup.ActiveToggles().FirstOrDefault();
+        if (selectedToggle == null)
+            return null;
+            
         return selectedToggle.GetComponent<Bet>();
-    }
-
-    public void LockInteraction()
-    {
     }
 
     private List<T> GetRandomUniqueItems<T>(List<T> list, int count)

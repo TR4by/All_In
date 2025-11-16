@@ -1,5 +1,5 @@
-using Microsoft.Unity.VisualStudio.Editor;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 [CreateAssetMenu(fileName = "SlotSymbol", menuName = "SlotSymbol", order = 0)]

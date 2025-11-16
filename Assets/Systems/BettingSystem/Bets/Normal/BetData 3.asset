@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rewardSymbol: 1
   rewardCount: 250
-  punishmentSymbol: 0
+  punishmentSymbol: 1
   punishmentCount: 50
   conditionSymbol: 1
   condition: 4

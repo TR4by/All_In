@@ -7,10 +7,12 @@ public class StatusDisplay : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI statusText;
     [SerializeField] private string betMessage = "Place your bets";
-    [SerializeField] private string waitMessage = "Spinning...";
-    [SerializeField] private string winMessage = "You Win!";
-    [SerializeField] private string loseMessage = "You Lose!";
-    [SerializeField] private float messageDuration = 1f;
+    [SerializeField] private string waitMessage = "Spinning";
+    [SerializeField] private string winMessage = "You Win";
+    [SerializeField] private string loseMessage = "You Lose";
+    [SerializeField] private float resultMessageDuration = 1f;
+    [SerializeField] private string brokeMessage = "Broke!   Losing  hearts";
+    [SerializeField] private float brokeMessageDuration = 1f;
 
     private string currentMessage;
 
@@ -46,10 +48,16 @@ public class StatusDisplay : MonoBehaviour
     {
         UpdateStatus(betMessage);
 
+        if (GameManager.Instance.IsPlayerBroke)
+        {
+            StartCoroutine(TemporaryStatusSequence(brokeMessage, brokeMessageDuration));
+            return;
+        }
+
         if (GameManager.Instance.WasLastRollWon)
-            StartCoroutine(TemporaryStatusSequence(winMessage, messageDuration));
+            StartCoroutine(TemporaryStatusSequence(winMessage, resultMessageDuration));
         else
-            StartCoroutine(TemporaryStatusSequence(loseMessage, messageDuration));
+            StartCoroutine(TemporaryStatusSequence(loseMessage, resultMessageDuration));
     }
 
     public void UpdateStatus(string message)

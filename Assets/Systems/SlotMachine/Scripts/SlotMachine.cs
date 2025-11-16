@@ -32,7 +32,8 @@ public class SlotMachine : MonoBehaviour
 
     private void StartSpinSequence()
     {
-        StartCoroutine(SpinSequence());
+        if (GameManager.Instance.BetChosen)
+            StartCoroutine(SpinSequence());
     }
     
     IEnumerator SpinSequence()

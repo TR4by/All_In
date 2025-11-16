@@ -7,24 +7,28 @@ public class CoinDisplay : MonoBehaviour
     [SerializeField] private TextMeshProUGUI coinText;
     [SerializeField] private int coinSpriteId;
     [SerializeField] private int maxCoins;
-    private int currentCoins;
+    public int CurrentCoinCount { get; private set; }
 
     void Awake()
     {
-        currentCoins = 0;
-        UpdateCoins(currentCoins);
+        CurrentCoinCount = 0;
+        UpdateCoins(CurrentCoinCount);
     }
 
     private void UpdateCoins(int coins)
     {
-        coinText.text = coins + $"<sprite={coinSpriteId}>";
+        var displayedText = coins + $"<sprite={coinSpriteId}>";
+        if (coins < 0)
+            displayedText = "<color=red>" + displayedText + "</color>";
+            
+        coinText.text = displayedText;
     }
 
     public void AddCoins(int amount)
     {
-        var newCoinCount = Mathf.Min(currentCoins + amount, maxCoins);
-        StartCoroutine(StartCoinUpdateSequence(currentCoins, newCoinCount));
-        currentCoins = newCoinCount;
+        var newCoinCount = Mathf.Min(CurrentCoinCount + amount, maxCoins);
+        StartCoroutine(StartCoinUpdateSequence(CurrentCoinCount, newCoinCount));
+        CurrentCoinCount = newCoinCount;
         
     }
 
